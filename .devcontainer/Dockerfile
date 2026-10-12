@@ -11,6 +11,7 @@ RUN apt-get update \
         debian-archive-keyring \
         file \
         git \
+        git-lfs \
         grub-common \
         grub-efi-amd64-bin \
         grub-pc-bin \
