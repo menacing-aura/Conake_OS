@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Conake Store
+Comment=Discover and install applications from Flathub
+Exec=gnome-software
+Icon=org.gnome.Software
+Terminal=false
+Categories=System;PackageManager;
+StartupNotify=true

@@ -42,6 +42,13 @@ cp -a "$ROOT_DIR/apps/welcome/." "$INCLUDES_DIR/"
 cp -a "$ROOT_DIR/apps/browser/." "$INCLUDES_DIR/"
 mkdir -p "$INCLUDES_DIR/usr/share/conake/branding"
 cp -a "$ROOT_DIR/assets/branding/." "$INCLUDES_DIR/usr/share/conake/branding/"
+mkdir -p "$INCLUDES_DIR/usr/share/backgrounds/conake"
+cp -a "$ROOT_DIR/assets/branding/wallpapers/." "$INCLUDES_DIR/usr/share/backgrounds/conake/"
+install -m 0644 "$ROOT_DIR/assets/branding/wallpaper.svg" \
+    "$INCLUDES_DIR/usr/share/backgrounds/conake/conake-minimal.svg"
+mkdir -p "$INCLUDES_DIR/usr/share/applications"
+install -m 0644 "$ROOT_DIR/apps/store/usr/share/applications/conake-store.desktop" \
+    "$INCLUDES_DIR/usr/share/applications/conake-store.desktop"
 chmod 0755 \
     "$INCLUDES_DIR/usr/local/sbin/conake-memory-profile" \
     "$INCLUDES_DIR/usr/local/bin/conake-welcome"
