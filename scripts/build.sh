@@ -58,6 +58,7 @@ ln -sfn ../conake-memory-profile.service \
 
 cd "$BUILD_DIR"
 lb config \
+    --mode debian \
     --distribution trixie \
     --architectures amd64 \
     --linux-packages linux-image \
