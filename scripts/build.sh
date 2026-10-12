@@ -60,6 +60,7 @@ cd "$BUILD_DIR"
 lb config \
     --mode debian \
     --distribution trixie \
+    --security false \
     --architectures amd64 \
     --linux-packages linux-image \
     --linux-flavours amd64 \
