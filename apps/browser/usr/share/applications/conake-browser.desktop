@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Conake Browser
+Comment=Browse the web with Conake
+Exec=firefox-esr %u
+Icon=firefox-esr
+Terminal=false
+Categories=Network;WebBrowser;
+StartupNotify=true
+MimeType=text/html;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;

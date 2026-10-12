@@ -1,0 +1,40 @@
+{
+  "name": "Conake OS Development",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "runArgs": [
+    "--privileged",
+    "--cap-add=SYS_ADMIN"
+  ],
+  "remoteUser": "vscode",
+  "postCreateCommand": "gcc --version && clang --version && make --version | head -n 1 && cmake --version | head -n 1 && python3 --version && rustc --version && cargo --version && qemu-system-x86_64 --version | head -n 1",
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": {
+      "label": "Conake OS QEMU desktop",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.makefile-tools",
+        "ms-vscode.cmake-tools",
+        "13xforever.language-x86-64-assembly",
+        "rust-lang.rust-analyzer",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "timonwong.shellcheck",
+        "redhat.vscode-yaml",
+        "github.vscode-github-actions",
+        "eamodio.gitlens",
+        "ms-vscode.hexeditor",
+        "usernamehw.errorlens",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  }
+}

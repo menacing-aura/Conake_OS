@@ -1,0 +1,13 @@
+[Unit]
+Description=Detect Conake memory profile and configure zRAM
+DefaultDependencies=no
+After=local-fs.target
+Before=zramswap.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/conake-memory-profile
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,39 @@
+#!/bin/sh
+set -eu
+
+total_kb=$(awk '/^MemTotal:/ { print $2 }' /proc/meminfo)
+total_mb=$((total_kb / 1024))
+
+if [ "$total_mb" -lt 2048 ]; then
+    profile=ultra-light
+    zram_percent=100
+elif [ "$total_mb" -lt 4096 ]; then
+    profile=lightweight
+    zram_percent=75
+elif [ "$total_mb" -lt 8192 ]; then
+    profile=normal
+    zram_percent=50
+else
+    profile=full
+    zram_percent=25
+fi
+
+install -d -m 0755 /run/conake
+printf '%s\n' "$profile" > /run/conake/memory-profile
+
+if grep -q '^PERCENT=' /etc/default/zramswap; then
+    sed -i "s/^PERCENT=.*/PERCENT=$zram_percent/" /etc/default/zramswap
+else
+    printf 'PERCENT=%s\n' "$zram_percent" >> /etc/default/zramswap
+fi
+
+if [ "$profile" = ultra-light ]; then
+    for service in cups.service cups-browsed.service; do
+        if systemctl list-unit-files "$service" --no-legend 2>/dev/null | grep -q "$service"; then
+            systemctl disable --now "$service" || true
+        fi
+    done
+fi
+
+printf 'Conake memory profile: %s (%s MiB RAM), zRAM: %s%%\n' \
+    "$profile" "$total_mb" "$zram_percent"

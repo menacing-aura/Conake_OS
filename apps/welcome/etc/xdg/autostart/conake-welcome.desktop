@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Conake Welcome
+Comment=Welcome to Conake OS
+Exec=/usr/local/bin/conake-welcome
+OnlyShowIn=XFCE;
+Terminal=false
+X-GNOME-Autostart-enabled=true

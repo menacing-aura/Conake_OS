@@ -1,0 +1,55 @@
+#!/usr/bin/python3
+import tkinter as tk
+from pathlib import Path
+
+
+PROFILE_PATH = Path("/run/conake/memory-profile")
+profile = PROFILE_PATH.read_text().strip() if PROFILE_PATH.exists() else "detecting"
+
+root = tk.Tk()
+root.title("Welcome to Conake OS")
+root.geometry("520x340")
+root.resizable(False, False)
+root.configure(background="#101820")
+
+content = tk.Frame(root, background="#101820", padx=34, pady=26)
+content.pack(fill="both", expand=True)
+
+tk.Label(
+    content,
+    text="CONAKE OS",
+    font=("Sans", 12, "bold"),
+    foreground="#68d5bb",
+    background="#101820",
+).pack(anchor="w")
+tk.Label(
+    content,
+    text="A lighter way to compute.",
+    font=("Sans", 23, "bold"),
+    foreground="#f4f7f6",
+    background="#101820",
+).pack(anchor="w", pady=(14, 8))
+tk.Label(
+    content,
+    text=f"Conake OS v0.1 is ready. Your system is running in {profile} mode.",
+    font=("Sans", 11),
+    foreground="#c5d0d0",
+    background="#101820",
+    wraplength=440,
+    justify="left",
+).pack(anchor="w", pady=(0, 24))
+
+tk.Button(
+    content,
+    text="Close",
+    command=root.destroy,
+    font=("Sans", 10, "bold"),
+    foreground="#101820",
+    background="#68d5bb",
+    activebackground="#8ce4d0",
+    relief="flat",
+    padx=20,
+    pady=9,
+).pack(anchor="w")
+
+root.mainloop()
