@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  DEBIAN_ARCHIVE_KEYRING_VERSION: "2025.1"
+
 jobs:
   build-iso:
     runs-on: ubuntu-22.04
@@ -48,9 +51,9 @@ jobs:
             live-build debootstrap xorriso squashfs-tools mtools \
             grub-pc-bin grub-efi-amd64-bin debian-archive-keyring
 
-          keyring_deb=/tmp/debian-archive-keyring_2025.1_all.deb
+          keyring_deb="/tmp/debian-archive-keyring_${DEBIAN_ARCHIVE_KEYRING_VERSION}_all.deb"
           retry curl --fail --silent --show-error --location \
-            https://deb.debian.org/debian/pool/main/d/debian-archive-keyring/debian-archive-keyring_2025.1_all.deb \
+            "https://deb.debian.org/debian/pool/main/d/debian-archive-keyring/debian-archive-keyring_${DEBIAN_ARCHIVE_KEYRING_VERSION}_all.deb" \
             --output "$keyring_deb"
           keyring_extract=/tmp/debian-archive-keyring-package
           dpkg-deb -x "$keyring_deb" "$keyring_extract"
