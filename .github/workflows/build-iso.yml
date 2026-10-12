@@ -11,6 +11,7 @@ permissions:
 
 env:
   DEBIAN_ARCHIVE_KEYRING_VERSION: "2025.1"
+  LIVE_BUILD_RELEASE: "20250505+deb13u1"
 
 jobs:
   build-iso:
@@ -48,8 +49,27 @@ jobs:
           sudo add-apt-repository -y universe
           retry sudo apt-get -o Acquire::Retries=3 update
           retry sudo apt-get install -y --no-install-recommends \
-            live-build debootstrap xorriso squashfs-tools mtools \
+            cpio debootstrap xorriso squashfs-tools mtools \
             grub-pc-bin grub-efi-amd64-bin debian-archive-keyring
+
+          sudo apt-get remove -y live-build || true
+          live_build_deb="/tmp/live-build_${LIVE_BUILD_RELEASE}_all.deb"
+          retry curl --fail --silent --show-error --location \
+            "https://deb.debian.org/debian/pool/main/l/live-build/live-build_${LIVE_BUILD_RELEASE}_all.deb" \
+            --output "$live_build_deb"
+          expected_live_build_version="1:${LIVE_BUILD_RELEASE}"
+          package_live_build_version="$(dpkg-deb -f "$live_build_deb" Version)"
+          if [[ "$package_live_build_version" != "$expected_live_build_version" ]]; then
+            echo "Expected live-build $expected_live_build_version, got $package_live_build_version" >&2
+            exit 1
+          fi
+          sudo dpkg -i "$live_build_deb"
+          installed_live_build_version="$(dpkg-query -W -f='${Version}' live-build)"
+          if [[ "$installed_live_build_version" != "$expected_live_build_version" ]]; then
+            echo "Expected installed live-build $expected_live_build_version, got $installed_live_build_version" >&2
+            exit 1
+          fi
+          dpkg-query -W -f='live-build ${Version}\n' live-build
 
           keyring_deb="/tmp/debian-archive-keyring_${DEBIAN_ARCHIVE_KEYRING_VERSION}_all.deb"
           retry curl --fail --silent --show-error --location \
