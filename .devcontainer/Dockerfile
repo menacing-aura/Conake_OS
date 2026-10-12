@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
+ARG LIVE_BUILD_VERSION=20250505+deb13u1
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -15,7 +16,6 @@ RUN apt-get update \
         grub-common \
         grub-efi-amd64-bin \
         grub-pc-bin \
-        live-build \
         make \
         mtools \
         nasm \
@@ -31,5 +31,11 @@ RUN apt-get update \
         websockify \
         xorriso \
         xz-utils \
+    && curl --fail --silent --show-error --location \
+        "https://deb.debian.org/debian/pool/main/l/live-build/live-build_${LIVE_BUILD_VERSION}_all.deb" \
+        --output "/tmp/live-build_${LIVE_BUILD_VERSION}_all.deb" \
+    && dpkg -i "/tmp/live-build_${LIVE_BUILD_VERSION}_all.deb" \
+    && test "$(dpkg-query -W -f='${Version}\n' live-build)" = "1:${LIVE_BUILD_VERSION}" \
+    && apt-get -f install -y \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* "/tmp/live-build_${LIVE_BUILD_VERSION}_all.deb"
