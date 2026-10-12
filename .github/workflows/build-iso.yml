@@ -18,8 +18,13 @@ jobs:
 
       - name: Install Debian Live build tools
         run: |
+          set -euxo pipefail
           sudo apt-get update
-          sudo apt-get install -y live-build xorriso squashfs-tools mtools \
+          sudo apt-get install -y --no-install-recommends software-properties-common
+          sudo add-apt-repository -y universe
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            live-build xorriso squashfs-tools mtools \
             grub-pc-bin grub-efi-amd64-bin debian-archive-keyring
 
       - name: Build ISO
