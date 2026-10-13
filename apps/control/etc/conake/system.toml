@@ -1,0 +1,10 @@
+# Read-only configuration for conakectl. Checking this file never changes the OS.
+# Run: conakectl config check
+# Desktop wallpaper/taskbar preferences remain per-user in Conake Studio.
+[desktop]
+command = "conake-settings"
+
+# An inventory for `conakectl services list --managed`, not an enable/start list.
+# Explicit service actions still accept other named services.
+[services]
+managed = ["NetworkManager.service", "lightdm.service", "conake-memory-profile.service"]

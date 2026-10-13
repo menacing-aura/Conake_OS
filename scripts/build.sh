@@ -31,34 +31,22 @@ if ! mount --bind /proc "$MOUNT_TEST_DIR/proc" >/dev/null 2>&1; then
     printf 'live-build requires mount privileges to create a Debian chroot. In GitHub Codespaces, enable a privileged devcontainer with --privileged and SYS_ADMIN.\n' >&2
     exit 1
 fi
-umount "$MOUNT_TEST_DIR/proc" >/dev/null 2>&1 || true
-rm -rf "$MOUNT_TEST_DIR"
+if ! umount "$MOUNT_TEST_DIR/proc"; then
+    printf 'Could not unmount the build privilege probe; stopping before cleanup.\n' >&2
+    exit 1
+fi
+rmdir "$MOUNT_TEST_DIR/proc" "$MOUNT_TEST_DIR"
+
+# Discard completed stages so changed packages and desktop files reach the next
+# ISO. The normal clean preserves downloaded packages; do not use --purge.
+if [[ -d "$BUILD_DIR/.build" ]]; then
+    (cd "$BUILD_DIR" && lb clean --all)
+fi
 
 rm -rf "$BUILD_DIR/config"
 cp -a "$CONFIG_DIR" "$BUILD_DIR/config"
-mkdir -p "$INCLUDES_DIR"
-cp -a "$ROOT_DIR/system/." "$INCLUDES_DIR/"
-cp -a "$ROOT_DIR/apps/welcome/." "$INCLUDES_DIR/"
-cp -a "$ROOT_DIR/apps/browser/." "$INCLUDES_DIR/"
-cp -a "$ROOT_DIR/apps/settings/." "$INCLUDES_DIR/"
-mkdir -p "$INCLUDES_DIR/usr/share/conake/branding"
-cp -a "$ROOT_DIR/assets/branding/." "$INCLUDES_DIR/usr/share/conake/branding/"
-mkdir -p "$INCLUDES_DIR/usr/share/backgrounds/conake"
-cp -a "$ROOT_DIR/assets/branding/wallpapers/." "$INCLUDES_DIR/usr/share/backgrounds/conake/"
-install -m 0644 "$ROOT_DIR/assets/branding/wallpaper.svg" \
-    "$INCLUDES_DIR/usr/share/backgrounds/conake/conake-minimal.svg"
-mkdir -p "$INCLUDES_DIR/usr/share/applications"
-install -m 0644 "$ROOT_DIR/apps/store/usr/share/applications/conake-store.desktop" \
-    "$INCLUDES_DIR/usr/share/applications/conake-store.desktop"
-chmod 0755 \
-    "$INCLUDES_DIR/usr/local/sbin/conake-memory-profile" \
-    "$INCLUDES_DIR/usr/local/bin/conake-welcome" \
-    "$INCLUDES_DIR/usr/local/bin/conake-settings"
-mkdir -p "$INCLUDES_DIR/etc/systemd/system/multi-user.target.wants"
-ln -sfn ../conake-memory-profile.service \
-    "$INCLUDES_DIR/etc/systemd/system/multi-user.target.wants/conake-memory-profile.service"
-ln -sfn /lib/systemd/system/earlyoom.service \
-    "$INCLUDES_DIR/etc/systemd/system/multi-user.target.wants/earlyoom.service"
+chmod 0755 "$BUILD_DIR/config/hooks/live/0900-flathub.hook.chroot"
+bash "$ROOT_DIR/scripts/stage-rootfs.sh" "$INCLUDES_DIR"
 
 cd "$BUILD_DIR"
 lb config \

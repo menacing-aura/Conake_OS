@@ -1,0 +1,67 @@
+name: Bug report
+description: Report a reproducible problem with the desktop, tools, build, or live image.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Include enough detail to reproduce the problem. Remove credentials, tokens, Wi-Fi passwords, and personal data from all logs and screenshots. For vulnerabilities, use private reporting if enabled or request a private maintainer contact without posting sensitive details.
+  - type: input
+    id: revision
+    attributes:
+      label: Version, branch, and commit
+      description: Include the ISO filename or workflow run link if relevant.
+      placeholder: "conake-os, commit abc1234, conake-os-v0.1-amd64.iso"
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Desktop or Conake Studio
+        - CLI or system service
+        - ISO or container build
+        - Boot or hardware
+        - Network or session
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: List host/live OS, CPU architecture, RAM, physical device or VM settings, BIOS/UEFI mode, and relevant GPU/network device IDs. Do not include serial numbers.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include exact commands or desktop actions and whether this occurs on a fresh live session.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include the error and exit code, if available.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Relevant logs or screenshots
+      description: Paste only relevant, redacted output. Build reports should include the failing step and live-build version. Service reports can include selected systemctl or journalctl output.
+  - type: textarea
+    id: regression
+    attributes:
+      label: Last working version or workaround
+      description: If known, explain when the problem began and what you have already tried.

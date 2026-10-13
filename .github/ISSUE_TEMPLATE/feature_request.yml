@@ -1,0 +1,44 @@
+name: Feature request
+description: Propose a focused improvement with testable behavior.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check docs/roadmap.md and existing issues first. Prefer a small first milestone with clear acceptance criteria. Planned roadmap entries are not released features.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: Who needs this, and what is difficult today?
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Proposed behavior
+      description: Describe a concrete user flow or command, including expected output or effects.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: List observable checks for success, important failures, and the smallest useful first milestone.
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Dependencies and system impact
+      description: Note affected hardware, permissions, storage, network access, backwards compatibility, accessibility, and recovery where relevant.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Existing tools or alternatives
+      description: Could Debian, systemd, APT, NetworkManager, or XFCE already provide the underlying feature?
+  - type: input
+    id: roadmap
+    attributes:
+      label: Related roadmap entry or issue
+      description: Link existing work if applicable.

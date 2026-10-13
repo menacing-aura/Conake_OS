@@ -1,0 +1,11 @@
+#!/usr/bin/python3
+"""Launch ConakePKG using the same module as conakectl packages."""
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "share/conake/control"))
+from conake_control import package_main
+
+
+if __name__ == "__main__":
+    sys.exit(package_main())

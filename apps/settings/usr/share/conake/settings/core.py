@@ -40,7 +40,7 @@ THEMES = {
                 "wallpaper": str(BACKGROUNDS / "conake-minimal.svg")},
 }
 if not Path(THEMES["minimal"]["wallpaper"]).exists():
-    THEMES["minimal"]["wallpaper"] = str(BACKGROUNDS / "conake-minimal.svg")
+    THEMES["minimal"]["wallpaper"] = str(BACKGROUNDS.parent / "wallpaper.svg")
 
 DEFAULTS = {
     "theme": "sakura", "wallpaper": THEMES["sakura"]["wallpaper"],
@@ -173,7 +173,12 @@ def list_wallpapers():
     minimal = Path(THEMES["minimal"]["wallpaper"])
     if minimal.is_file():
         paths.add(minimal)
-    return [(path.stem.removeprefix("conake-").replace("-", " ").title(), str(path)) for path in sorted(paths)]
+    entries = []
+    for path in sorted(paths):
+        stem = re.sub(r"-[0-9a-f]{12}$", "", path.stem.removeprefix("conake-"))
+        label = "Quiet mint" if path == minimal else stem.replace("-", " ").title()
+        entries.append((label, str(path)))
+    return entries
 
 
 def _query(*args, optional=False):

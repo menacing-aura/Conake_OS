@@ -37,6 +37,10 @@ def main():
             os.environ[name] = str(target)
         os.environ["XDG_CONFIG_DIRS"] = "/etc/xdg"
         os.environ["XDG_CURRENT_DESKTOP"] = "XFCE"
+        # The private D-Bus daemon predates this process. Its activated services
+        # must inherit the same temporary paths, rather than the user's paths.
+        subprocess.run(["dbus-update-activation-environment", "XDG_CONFIG_HOME", "XDG_DATA_HOME",
+                        "XDG_CACHE_HOME", "XDG_RUNTIME_DIR", "XDG_CONFIG_DIRS", "XDG_CURRENT_DESKTOP"], check=True)
         channels = temporary / "config/xfce4/xfconf/xfce-perchannel-xml"
         channels.mkdir(parents=True)
         for source in (ROOT / "system/etc/xdg/xfce4/xfconf/xfce-perchannel-xml").glob("*.xml"):
@@ -67,6 +71,9 @@ def main():
                     time.sleep(0.2)
                 else:
                     raise AssertionError(f"XFCE did not initialize; inspect {log_path}")
+                # Properties are read from defaults before the WM/panel windows
+                # finish mapping. Allow those windows to appear before capture.
+                time.sleep(4)
                 root = tk.Tk()
                 errors = []
                 root.report_callback_exception = lambda kind, error, trace: errors.append(str(error))

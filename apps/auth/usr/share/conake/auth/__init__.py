@@ -1,6 +1,11 @@
-"""Conake Google OAuth2 Authentication Module."""
+"""Optional Conake Google account-linking API (no OS login integration or UI)."""
 
-from .core import GoogleAuth, AuthError, load_credentials, save_credentials, clear_credentials
-from .ui import AuthWindow
+from .core import (
+    AuthError, GoogleAuth, clear_credentials, get_client_config, get_user_info,
+    is_authenticated, load_credentials, save_client_config, save_credentials,
+)
 
-__all__ = ["GoogleAuth", "AuthError", "load_credentials", "save_credentials", "clear_credentials", "AuthWindow"]
+__all__ = [
+    "AuthError", "GoogleAuth", "clear_credentials", "get_client_config", "get_user_info",
+    "is_authenticated", "load_credentials", "save_client_config", "save_credentials",
+]
