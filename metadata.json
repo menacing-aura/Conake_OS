@@ -1,8 +1,0 @@
-{
-  "name": "Conake OS",
-  "description": "A lighter way to compute — Debian-based live desktop system with dynamic RAM profiling, zRAM compression, Arc Dark desktop, and lightweight apps.",
-  "permissions": [],
-  "capabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
-}

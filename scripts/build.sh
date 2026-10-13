@@ -11,7 +11,7 @@ if [[ "$EUID" -ne 0 ]]; then
         exit 1
     fi
     export CONAKE_BUILD_DIR="${CONAKE_BUILD_DIR:-$HOME/.cache/conake-os/live-build}"
-    exec sudo --preserve-env=PATH,CONAKE_BUILD_DIR "$0" "$@"
+    exec sudo --preserve-env=PATH,CONAKE_BUILD_DIR bash "$0" "$@"
 fi
 
 BUILD_DIR="${CONAKE_BUILD_DIR:-$HOME/.cache/conake-os/live-build}"
@@ -40,6 +40,7 @@ mkdir -p "$INCLUDES_DIR"
 cp -a "$ROOT_DIR/system/." "$INCLUDES_DIR/"
 cp -a "$ROOT_DIR/apps/welcome/." "$INCLUDES_DIR/"
 cp -a "$ROOT_DIR/apps/browser/." "$INCLUDES_DIR/"
+cp -a "$ROOT_DIR/apps/settings/." "$INCLUDES_DIR/"
 mkdir -p "$INCLUDES_DIR/usr/share/conake/branding"
 cp -a "$ROOT_DIR/assets/branding/." "$INCLUDES_DIR/usr/share/conake/branding/"
 mkdir -p "$INCLUDES_DIR/usr/share/backgrounds/conake"
@@ -51,10 +52,13 @@ install -m 0644 "$ROOT_DIR/apps/store/usr/share/applications/conake-store.deskto
     "$INCLUDES_DIR/usr/share/applications/conake-store.desktop"
 chmod 0755 \
     "$INCLUDES_DIR/usr/local/sbin/conake-memory-profile" \
-    "$INCLUDES_DIR/usr/local/bin/conake-welcome"
+    "$INCLUDES_DIR/usr/local/bin/conake-welcome" \
+    "$INCLUDES_DIR/usr/local/bin/conake-settings"
 mkdir -p "$INCLUDES_DIR/etc/systemd/system/multi-user.target.wants"
 ln -sfn ../conake-memory-profile.service \
     "$INCLUDES_DIR/etc/systemd/system/multi-user.target.wants/conake-memory-profile.service"
+ln -sfn /lib/systemd/system/earlyoom.service \
+    "$INCLUDES_DIR/etc/systemd/system/multi-user.target.wants/earlyoom.service"
 
 cd "$BUILD_DIR"
 lb config \
@@ -74,6 +78,30 @@ lb config \
     --mirror-binary-security http://security.debian.org/debian-security/ \
     --bootappend-live "boot=live components username=conake hostname=conake quiet splash"
 lb build
+
+USER_SETUP_STATUS="$(dpkg-query --admindir="$BUILD_DIR/chroot/var/lib/dpkg" \
+    -W -f='${Status}' user-setup 2>/dev/null || true)"
+if [[ "$USER_SETUP_STATUS" != "install ok installed" ]]; then
+    printf 'The live image is missing the user-setup package required to create the conake account.\n' >&2
+    exit 1
+fi
+
+for boot_config in \
+    "$BUILD_DIR/binary/boot/grub/grub.cfg" \
+    "$BUILD_DIR/binary/isolinux/live.cfg"; do
+    if ! grep -Fq 'username=conake hostname=conake' "$boot_config"; then
+        printf 'Expected conake live-user and hostname arguments in %s.\n' "$boot_config" >&2
+        exit 1
+    fi
+done
+
+LIGHTDM_CONFIG="$BUILD_DIR/config/includes.chroot/etc/lightdm/lightdm.conf.d/50-conake.conf"
+for setting in '[Seat:*]' 'autologin-user=conake' 'autologin-user-timeout=0'; do
+    if ! grep -Fqx "$setting" "$LIGHTDM_CONFIG"; then
+        printf 'Missing LightDM live autologin setting: %s\n' "$setting" >&2
+        exit 1
+    fi
+done
 
 if [[ ! -s "$BUILD_DIR/live-image-amd64.hybrid.iso" ]]; then
     printf 'live-build completed without producing its expected ISO.\n' >&2

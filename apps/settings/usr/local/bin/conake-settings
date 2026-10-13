@@ -1,0 +1,9 @@
+#!/usr/bin/python3
+"""Open Conake Studio using the system Python and its Tk dependencies."""
+import sys
+
+sys.path.insert(0, "/usr/share/conake/settings")
+from ui import main
+
+if __name__ == "__main__":
+    main()

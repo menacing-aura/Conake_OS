@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Conake Studio
+Comment=Make this desktop yours: wallpapers, taskbar, themes and focus timer
+Exec=conake-settings
+Icon=preferences-desktop-theme
+Terminal=false
+Categories=Settings;DesktopSettings;
+Keywords=wallpaper;anime;theme;taskbar;panel;focus;personalization;
+StartupNotify=false

@@ -8,8 +8,10 @@ RUN apt-get update \
         build-essential \
         clang \
         cmake \
+        cpio \
         curl \
         debian-archive-keyring \
+        debootstrap \
         file \
         git \
         git-lfs \
