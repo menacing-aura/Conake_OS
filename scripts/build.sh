@@ -40,6 +40,7 @@ mkdir -p "$INCLUDES_DIR"
 cp -a "$ROOT_DIR/system/." "$INCLUDES_DIR/"
 cp -a "$ROOT_DIR/apps/welcome/." "$INCLUDES_DIR/"
 cp -a "$ROOT_DIR/apps/browser/." "$INCLUDES_DIR/"
+cp -a "$ROOT_DIR/apps/settings/." "$INCLUDES_DIR/"
 mkdir -p "$INCLUDES_DIR/usr/share/conake/branding"
 cp -a "$ROOT_DIR/assets/branding/." "$INCLUDES_DIR/usr/share/conake/branding/"
 mkdir -p "$INCLUDES_DIR/usr/share/backgrounds/conake"
@@ -51,7 +52,8 @@ install -m 0644 "$ROOT_DIR/apps/store/usr/share/applications/conake-store.deskto
     "$INCLUDES_DIR/usr/share/applications/conake-store.desktop"
 chmod 0755 \
     "$INCLUDES_DIR/usr/local/sbin/conake-memory-profile" \
-    "$INCLUDES_DIR/usr/local/bin/conake-welcome"
+    "$INCLUDES_DIR/usr/local/bin/conake-welcome" \
+    "$INCLUDES_DIR/usr/local/bin/conake-settings"
 mkdir -p "$INCLUDES_DIR/etc/systemd/system/multi-user.target.wants"
 ln -sfn ../conake-memory-profile.service \
     "$INCLUDES_DIR/etc/systemd/system/multi-user.target.wants/conake-memory-profile.service"
