@@ -4,6 +4,14 @@ Conake OS v0.1 is a Debian-based live desktop prototype. It uses Debian Live and
 XFCE rather than a custom kernel, with boot-time RAM profiling, zRAM, a small
 welcome screen, and a reproducible ISO build workflow.
 
+## Download
+
+[Download Conake OS v0.1 for 64-bit PCs](https://github.com/webone1aura-cmyk/Conake_OS/releases/latest/download/conake-os-v0.1-amd64.iso)
+
+The direct download is published with each versioned GitHub Release. To create
+the first release, push a version tag such as `v0.1` after committing the
+workflow changes.
+
 ## Build and run
 
 Open this repository in GitHub Codespaces, wait for the development container
@@ -19,7 +27,7 @@ tree lives in `~/.cache/conake-os/` so debootstrap can execute outside the
 Codespaces noexec workspace mount. The run script starts QEMU and a
 browser-accessible noVNC session on port 6080. Use
 `./scripts/run.sh --help` for options. Build output is ignored by Git; CI
-uploads the ISO as a downloadable workflow artifact.
+uploads an artifact for test builds and attaches the ISO to tagged releases.
 
 The first build downloads Debian packages and can take a while. A successful
 build requires network access and several gigabytes of free disk space.
