@@ -64,7 +64,7 @@ lb config \
     --mirror-chroot-security http://security.debian.org/debian-security/ \
     --mirror-binary http://deb.debian.org/debian/ \
     --mirror-binary-security http://security.debian.org/debian-security/ \
-    --bootappend-live "boot=live components username=conake hostname=conake quiet splash"
+    --bootappend-live "boot=live components username=conake hostname=conake user-fullname=Conake quiet splash"
 lb build
 
 USER_SETUP_STATUS="$(dpkg-query --admindir="$BUILD_DIR/chroot/var/lib/dpkg" \
@@ -79,6 +79,10 @@ for boot_config in \
     "$BUILD_DIR/binary/isolinux/live.cfg"; do
     if ! grep -Fq 'username=conake hostname=conake' "$boot_config"; then
         printf 'Expected conake live-user and hostname arguments in %s.\n' "$boot_config" >&2
+        exit 1
+    fi
+    if ! grep -Fq 'user-fullname=Conake' "$boot_config"; then
+        printf 'Expected Conake live-session display name in %s.\n' "$boot_config" >&2
         exit 1
     fi
 done
