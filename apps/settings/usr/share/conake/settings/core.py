@@ -44,8 +44,8 @@ if not Path(THEMES["minimal"]["wallpaper"]).exists():
 
 DEFAULTS = {
     "theme": "sakura", "wallpaper": THEMES["sakura"]["wallpaper"],
-    "wallpaper_style": "zoom", "panel_id": 1, "panel_position": "bottom",
-    "panel_size": 40, "panel_length": 100, "panel_autohide": "never",
+    "wallpaper_style": "zoom", "panel_id": 1, "panel_position": "top",
+    "panel_size": 40, "panel_length": 100, "panel_autohide": "always",
     "panel_opacity": 94, "panel_color": THEMES["sakura"]["panel"],
     "taskbar_labels": True, "dark_mode": True, "compositing": True,
     "desktop_icons": False, "font_size": 10, "clock_24h": True,

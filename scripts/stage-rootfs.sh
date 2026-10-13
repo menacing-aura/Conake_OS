@@ -31,6 +31,7 @@ chmod 0755 \
     "$INCLUDES_DIR/usr/local/sbin/conake-memory-profile" \
     "$INCLUDES_DIR/usr/local/bin/conake-welcome" \
     "$INCLUDES_DIR/usr/local/bin/conake-settings" \
+    "$INCLUDES_DIR/usr/local/bin/conake-island" \
     "$INCLUDES_DIR/usr/local/bin/conakectl" \
     "$INCLUDES_DIR/usr/local/bin/conakepkg"
 mkdir -p "$INCLUDES_DIR/etc/systemd/system/multi-user.target.wants"

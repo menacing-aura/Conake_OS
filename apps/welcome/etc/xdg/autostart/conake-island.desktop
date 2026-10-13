@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Conake Island
+Comment=Top-center Conake status pill
+Exec=/usr/local/bin/conake-island
+OnlyShowIn=XFCE;
+NoDisplay=true
+X-GNOME-Autostart-enabled=true

@@ -91,6 +91,10 @@ class FakeXfconf:
 
 
 class DesktopSettingsTests(unittest.TestCase):
+    def test_default_taskbar_is_top_aligned_and_auto_hides(self):
+        self.assertEqual(core.DEFAULTS["panel_position"], "top")
+        self.assertEqual(core.DEFAULTS["panel_autohide"], "always")
+
     def setUp(self):
         temporary = tempfile.TemporaryDirectory(prefix="conake-settings-test-")
         self.addCleanup(temporary.cleanup)

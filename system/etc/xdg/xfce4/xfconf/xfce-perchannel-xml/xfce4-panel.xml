@@ -5,13 +5,13 @@
     <value type="int" value="1"/>
     <property name="dark-mode" type="bool" value="true"/>
     <property name="panel-1" type="empty">
-      <property name="position" type="string" value="p=10;x=0;y=0"/>
+      <property name="position" type="string" value="p=9;x=0;y=0"/>
       <property name="position-locked" type="bool" value="true"/>
       <property name="mode" type="uint" value="0"/>
       <property name="size" type="uint" value="40"/>
       <property name="length" type="double" value="100"/>
       <property name="length-adjust" type="bool" value="false"/>
-      <property name="autohide-behavior" type="uint" value="0"/>
+      <property name="autohide-behavior" type="uint" value="2"/>
       <property name="background-style" type="uint" value="1"/>
       <property name="background-rgba" type="array">
         <value type="double" value="0.145098"/>

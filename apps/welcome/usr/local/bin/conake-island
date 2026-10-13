@@ -1,0 +1,124 @@
+#!/usr/bin/python3
+"""Top-center Conake status pill for XFCE."""
+
+from datetime import datetime
+
+import gi
+
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gdk, GLib, Gtk
+
+
+CSS = b"""
+window#conake-island {
+    background-color: transparent;
+}
+#island-pill {
+    background-color: #050608;
+    border: 1px solid #252630;
+    border-radius: 18px;
+    padding: 6px 12px;
+}
+#island-lens {
+    background-image: radial-gradient(circle, #1c4563 0%, #09131d 58%, #030407 100%);
+    border: 1px solid #527d92;
+    border-radius: 8px;
+    min-width: 12px;
+    min-height: 12px;
+}
+#island-name {
+    color: #f1eef9;
+    font-size: 10px;
+    font-weight: 600;
+}
+#island-clock {
+    color: #8edbdc;
+    font-size: 10px;
+}
+"""
+
+
+class ConakeIsland:
+    def __init__(self):
+        self.screen = Gdk.Screen.get_default()
+        self.window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
+        self.window.set_name("conake-island")
+        self.window.set_title("Conake Island")
+        self.window.set_decorated(False)
+        self.window.set_resizable(False)
+        self.window.set_keep_above(True)
+        self.window.set_skip_taskbar_hint(True)
+        self.window.set_skip_pager_hint(True)
+        self.window.set_accept_focus(False)
+        self.window.set_type_hint(Gdk.WindowTypeHint.DOCK)
+        self.window.set_app_paintable(True)
+        visual = self.screen.get_rgba_visual()
+        if visual:
+            self.window.set_visual(visual)
+
+        provider = Gtk.CssProvider()
+        provider.load_from_data(CSS)
+        Gtk.StyleContext.add_provider_for_screen(
+            self.screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+
+        self.pill = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=9)
+        self.pill.set_name("island-pill")
+        self.lens = Gtk.Box()
+        self.lens.set_name("island-lens")
+        self.pill.pack_start(self.lens, False, False, 0)
+
+        self.name = Gtk.Label(label="Conake OS")
+        self.name.set_name("island-name")
+        self.clock = Gtk.Label()
+        self.clock.set_name("island-clock")
+        self.pill.pack_start(self.name, False, False, 0)
+        self.pill.pack_end(self.clock, False, False, 0)
+
+        self.events = Gtk.EventBox()
+        self.events.set_visible_window(False)
+        self.events.add(self.pill)
+        self.events.add_events(Gdk.EventMask.ENTER_NOTIFY_MASK | Gdk.EventMask.LEAVE_NOTIFY_MASK)
+        self.events.connect("enter-notify-event", self._expand)
+        self.events.connect("leave-notify-event", self._collapse)
+        self.window.add(self.events)
+        self.window.set_tooltip_text("Conake OS status · hover to expand")
+
+        self.expanded = False
+        self.name.hide()
+        self.clock.hide()
+        self.window.show_all()
+        self.name.hide()
+        self.clock.hide()
+        self._place(72)
+        GLib.timeout_add_seconds(15, self._update_clock)
+
+    def _place(self, width):
+        self.window.resize(width, 34)
+        self.window.move(max(0, (self.screen.get_width() - width) // 2), 4)
+
+    def _update_clock(self):
+        self.clock.set_text(datetime.now().strftime("%H:%M"))
+        return GLib.SOURCE_CONTINUE
+
+    def _expand(self, _widget, _event):
+        if not self.expanded:
+            self.expanded = True
+            self.name.show()
+            self.clock.show()
+            self._update_clock()
+            self._place(180)
+        return False
+
+    def _collapse(self, _widget, _event):
+        if self.expanded:
+            self.expanded = False
+            self.name.hide()
+            self.clock.hide()
+            self._place(72)
+        return False
+
+
+if __name__ == "__main__":
+    ConakeIsland()
+    Gtk.main()
