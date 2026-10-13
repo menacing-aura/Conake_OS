@@ -44,7 +44,7 @@ trap cleanup EXIT INT TERM
 
 NOVNC_DIR="/usr/share/novnc"
 if [[ ! -d "$NOVNC_DIR" ]]; then
-    NOVNC_DIR="/usr/share/novnc"
+    NOVNC_DIR="/usr/lib/novnc"
 fi
 websockify --web="$NOVNC_DIR" "$WEB_PORT" "127.0.0.1:$VNC_PORT" &
 WEBSOCKIFY_PID=$!

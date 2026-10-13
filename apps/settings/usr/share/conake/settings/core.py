@@ -40,7 +40,7 @@ THEMES = {
                 "wallpaper": str(BACKGROUNDS / "conake-minimal.svg")},
 }
 if not Path(THEMES["minimal"]["wallpaper"]).exists():
-    THEMES["minimal"]["wallpaper"] = str(BACKGROUNDS.parent / "wallpaper.svg")
+    THEMES["minimal"]["wallpaper"] = str(BACKGROUNDS / "conake-minimal.svg")
 
 DEFAULTS = {
     "theme": "sakura", "wallpaper": THEMES["sakura"]["wallpaper"],
