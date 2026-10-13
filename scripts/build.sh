@@ -11,7 +11,7 @@ if [[ "$EUID" -ne 0 ]]; then
         exit 1
     fi
     export CONAKE_BUILD_DIR="${CONAKE_BUILD_DIR:-$HOME/.cache/conake-os/live-build}"
-    exec sudo --preserve-env=PATH,CONAKE_BUILD_DIR "$0" "$@"
+    exec sudo --preserve-env=PATH,CONAKE_BUILD_DIR bash "$0" "$@"
 fi
 
 BUILD_DIR="${CONAKE_BUILD_DIR:-$HOME/.cache/conake-os/live-build}"
