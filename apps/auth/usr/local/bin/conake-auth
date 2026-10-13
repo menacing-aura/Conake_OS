@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+"""Conake Google Authentication Main Entry Point."""
+
+import sys
+import os
+from pathlib import Path
+
+# Add auth module to path
+sys.path.insert(0, str(Path(__file__).parent.parent / "usr" / "share" / "conake" / "auth"))
+
+import tkinter as tk
+from ui import AuthWindow
+
+
+def main():
+    root = tk.Tk()
+    app = AuthWindow(root)
+    result = app.show()
+    if result and isinstance(result, dict) and result.get("status") == "success":
+        return 0
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

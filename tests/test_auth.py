@@ -209,7 +209,8 @@ class AuthTests(unittest.TestCase):
         self.request.side_effect = self.provider
         self.assertTrue(self.auth.refresh_token())
         call = self.request.call_args
-        self.assertEqual(call.kwargs["url"], core.GOOGLE_TOKEN_URL)
+        # The URL is passed as a positional argument, not a keyword argument
+        self.assertEqual(call.args[1], core.GOOGLE_TOKEN_URL)
         self.assertEqual(call.kwargs["data"]["grant_type"], "refresh_token")
         self.assertEqual(call.kwargs["data"]["refresh_token"], "test-refresh")
         saved = core.load_credentials()
