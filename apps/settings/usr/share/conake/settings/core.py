@@ -1,6 +1,7 @@
 """User-scoped desktop preferences for Conake Studio (no root access needed)."""
 
 import hashlib
+import io
 import json
 import os
 from pathlib import Path
@@ -118,6 +119,8 @@ def load_preferences():
 
 
 def _validate_image(path):
+    from PIL import Image
+
     path = Path(path).expanduser().resolve()
     if path.suffix.lower() not in IMAGE_SUFFIXES or not path.is_file():
         raise SettingsError("Choose a PNG, JPEG, WebP, or SVG image file.")
@@ -132,12 +135,11 @@ def _validate_image(path):
             if root.tag != "{http://www.w3.org/2000/svg}svg":
                 raise ValueError("Not an SVG")
         else:
-            from PIL import Image
             with Image.open(path) as image:
                 if image.width * image.height > 40_000_000:
                     raise SettingsError("Choose an image with no more than 40 million pixels.")
                 image.verify()
-    except (ValueError, OSError, ET.ParseError) as error:
+    except (ValueError, OSError, ET.ParseError, Image.DecompressionBombError) as error:
         raise SettingsError("This image could not be read. Try another image.") from error
     return path
 
@@ -145,9 +147,20 @@ def _validate_image(path):
 def import_wallpaper(path):
     source = _validate_image(path)
     data = source.read_bytes()
+    suffix = source.suffix.lower()
+    # PNG works with the stock XFCE image loaders; a WebP loader is optional.
+    if suffix == ".webp":
+        from PIL import Image, ImageOps
+        with Image.open(source) as image:
+            output = io.BytesIO()
+            ImageOps.exif_transpose(image).convert("RGB").save(output, format="PNG")
+            data = output.getvalue()
+        if len(data) > MAX_IMAGE_BYTES:
+            raise SettingsError("This WebP is too large after conversion. Choose a smaller image.")
+        suffix = ".png"
     digest = hashlib.sha256(data).hexdigest()[:12]
     stem = re.sub(r"[^\w -]", "", source.stem)[:60].strip() or "wallpaper"
-    destination = wallpaper_dir() / f"{stem}-{digest}{source.suffix.lower()}"
+    destination = wallpaper_dir() / f"{stem}-{digest}{suffix}"
     _atomic_write(destination, data)
     return str(destination)
 
