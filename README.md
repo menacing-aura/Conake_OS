@@ -6,7 +6,7 @@ welcome screen, and a reproducible ISO build workflow.
 
 ## Download
 
-[Download Conake OS v0.1 for 64-bit PCs]([https://github.com/webone1aura-cmyk/Conake_OS/releases/latest/download/conake-os-v0.1-amd64.iso](https://github.com/menacing-aura/Conake_OS/releases/download/v0.1.1/conake-os-v0.1-amd64.iso))
+[Download Conake OS v0.1.1 for 64-bit PCs]([https://github.com/webone1aura-cmyk/Conake_OS/releases/latest/download/conake-os-v0.1-amd64.iso](https://github.com/menacing-aura/Conake_OS/releases/download/v0.1.1/conake-os-v0.1-amd64.iso))
 
 The direct download is published with each versioned GitHub Release. To create
 the first release, push a version tag such as `v0.1` after committing the
