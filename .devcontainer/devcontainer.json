@@ -5,7 +5,8 @@
   },
   "runArgs": [
     "--privileged",
-    "--cap-add=SYS_ADMIN"
+    "--cap-add=SYS_ADMIN",
+    "--group-add=109"
   ],
   "remoteUser": "vscode",
   "postCreateCommand": "gcc --version && clang --version && make --version | head -n 1 && cmake --version | head -n 1 && python3 --version && rustc --version && cargo --version && qemu-system-x86_64 --version | head -n 1",
