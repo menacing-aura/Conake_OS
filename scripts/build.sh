@@ -55,6 +55,8 @@ chmod 0755 \
 mkdir -p "$INCLUDES_DIR/etc/systemd/system/multi-user.target.wants"
 ln -sfn ../conake-memory-profile.service \
     "$INCLUDES_DIR/etc/systemd/system/multi-user.target.wants/conake-memory-profile.service"
+ln -sfn /lib/systemd/system/earlyoom.service \
+    "$INCLUDES_DIR/etc/systemd/system/multi-user.target.wants/earlyoom.service"
 
 cd "$BUILD_DIR"
 lb config \

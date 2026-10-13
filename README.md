@@ -40,6 +40,8 @@ build requires network access and several gigabytes of free disk space.
 
 The live image creates a `conake` session, starts XFCE, and detects installed
 RAM early in boot. It selects ultra-light (<2 GB), lightweight (2-4 GB), normal
-(4-8 GB), or full (8 GB+) mode, then sizes zRAM accordingly. The first release
-does not install to disk; an installer, persistent swap setup, and custom
-desktop are future milestones.
+(4-8 GB), or full (8 GB+) mode, then sizes zRAM accordingly. `earlyoom` acts
+as a last-resort guard when both available RAM and swap fall below 5%; it may
+terminate a process under severe pressure and does not unload individual
+browser tabs. The first release does not install to disk; an installer,
+persistent swap setup, and custom desktop are future milestones.

@@ -12,6 +12,7 @@ xserver-xorg
 dbus-x11
 network-manager
 network-manager-gnome
+earlyoom
 zram-tools
 firefox-esr
 arc-theme
