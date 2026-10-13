@@ -1,6 +1,7 @@
 live-boot
 live-config
 live-config-systemd
+user-setup
 locales
 sudo
 systemd-sysv

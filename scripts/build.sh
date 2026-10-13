@@ -79,6 +79,30 @@ lb config \
     --bootappend-live "boot=live components username=conake hostname=conake quiet splash"
 lb build
 
+USER_SETUP_STATUS="$(dpkg-query --admindir="$BUILD_DIR/chroot/var/lib/dpkg" \
+    -W -f='${Status}' user-setup 2>/dev/null || true)"
+if [[ "$USER_SETUP_STATUS" != "install ok installed" ]]; then
+    printf 'The live image is missing the user-setup package required to create the conake account.\n' >&2
+    exit 1
+fi
+
+for boot_config in \
+    "$BUILD_DIR/binary/boot/grub/grub.cfg" \
+    "$BUILD_DIR/binary/isolinux/live.cfg"; do
+    if ! grep -Fq 'username=conake hostname=conake' "$boot_config"; then
+        printf 'Expected conake live-user and hostname arguments in %s.\n' "$boot_config" >&2
+        exit 1
+    fi
+done
+
+LIGHTDM_CONFIG="$BUILD_DIR/config/includes.chroot/etc/lightdm/lightdm.conf.d/50-conake.conf"
+for setting in '[Seat:*]' 'autologin-user=conake' 'autologin-user-timeout=0'; do
+    if ! grep -Fqx "$setting" "$LIGHTDM_CONFIG"; then
+        printf 'Missing LightDM live autologin setting: %s\n' "$setting" >&2
+        exit 1
+    fi
+done
+
 if [[ ! -s "$BUILD_DIR/live-image-amd64.hybrid.iso" ]]; then
     printf 'live-build completed without producing its expected ISO.\n' >&2
     exit 1
